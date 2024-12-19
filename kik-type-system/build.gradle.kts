@@ -1,5 +1,6 @@
 plugins {
     id("kik.library")
+    id("org.erwinkok.kik.compiler-plugin")
 }
 
 dependencies {

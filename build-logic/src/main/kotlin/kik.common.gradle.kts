@@ -1,13 +1,22 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     idea
     kotlin("jvm")
 }
 
 group = "org.erwinkok.kik"
-version = "0.0.1"
+version = "0.1.0"
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
 }
 
 tasks.withType<JavaCompile>().configureEach {

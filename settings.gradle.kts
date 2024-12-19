@@ -24,8 +24,7 @@ plugins {
 
 rootProject.name = "kik"
 
-//includeBuild("kik-compiler-plugin")
-//includeBuild("kik-gradle-plugin")
+includeBuild("kik-compiler-plugin")
+includeBuild("kik-gradle-plugin")
 
 include(":kik-type-system")
-//include(":kik-client")

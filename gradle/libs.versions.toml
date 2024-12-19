@@ -1,11 +1,26 @@
 [versions]
-kotlin = "2.0.21"
+auto-service = "1.1.1"
+auto-service-ksp = "1.2.0"
+kotlin = "2.1.0"
+kotlin-compile-testing = "0.7.0"
 
 # Plugins
+compatibility-plugin = "0.16.3"
+ksp-plugin = "2.1.0-1.0.29"
 versions-plugin = "0.51.0"
 
 [libraries]
+kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
+auto-service = { module = "com.google.auto.service:auto-service", version.ref = "auto-service" }
+auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "auto-service" }
+auto-service-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "auto-service-ksp" }
+kotlin-compile-testing = { module = "dev.zacsweers.kctfork:core", version.ref = "kotlin-compile-testing" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
 [plugins]
-build-versions = { id = "com.github.ben-manes.versions", version.ref = "versions-plugin" }
+compatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "compatibility-plugin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-plugin" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions-plugin" }
+
