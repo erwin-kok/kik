@@ -1,13 +1,19 @@
+import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     idea
     kotlin("jvm")
+    com.adarshr.`test-logger`
 }
 
 group = "org.erwinkok.kik"
 version = "0.1.0"
+
+testlogger {
+    theme = ThemeType.MOCHA
+}
 
 tasks.test {
     useJUnitPlatform()

@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation(libs.kotlin.gradlePlugin)
-
+    implementation(libs.testlogger.gradlePlugin)
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 

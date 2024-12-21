@@ -16,3 +16,11 @@ tasks.withType<DependencyUpdatesTask> {
         isNonStable(candidate.version)
     }
 }
+
+tasks.register("build") {
+    dependsOn(gradle.includedBuild("kik-compiler-plugin").task(":build"))
+}
+
+tasks.register("clean") {
+    dependsOn(gradle.includedBuild("kik-compiler-plugin").task(":clean"))
+}

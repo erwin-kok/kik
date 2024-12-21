@@ -1,3 +1,4 @@
+import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -6,6 +7,7 @@ plugins {
     kotlin("jvm") version "2.1.0"
     alias(libs.plugins.ksp)
     alias(libs.plugins.compatibility)
+    alias(libs.plugins.testlogger)
 }
 
 group = "org.erwinkok.kik"
@@ -25,6 +27,14 @@ dependencies {
 
     testImplementation(libs.kotlin.compile.testing)
     testImplementation(libs.kotlin.test)
+}
+
+testlogger {
+    theme = ThemeType.MOCHA
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile>().configureEach {

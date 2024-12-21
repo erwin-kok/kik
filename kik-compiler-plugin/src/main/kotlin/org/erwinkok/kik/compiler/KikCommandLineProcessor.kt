@@ -14,7 +14,16 @@ import kotlin.text.toBoolean
 
 @AutoService(CommandLineProcessor::class)
 class KikCommandLineProcessor : CommandLineProcessor {
-    companion object {
+    override val pluginId = "org.erwinkok.kik.kik-compiler-plugin"
+    override val pluginOptions = listOf(ENABLED_OPTION, DEBUG_OPTION)
+
+    override fun processOption(option: AbstractCliOption, value: String, configuration: CompilerConfiguration) = when (option) {
+        ENABLED_OPTION -> configuration.put(KEY_ENABLED, value.toBoolean())
+        DEBUG_OPTION -> configuration.put(KEY_DEBUG, value.toBoolean())
+        else -> throw CliOptionProcessingException("Unknown option: ${option.optionName}")
+    }
+
+    internal companion object {
         internal val KEY_ENABLED = CompilerConfigurationKey<Boolean>("Enable/disable the kik compiler plugin on the given compilation")
         internal val KEY_DEBUG = CompilerConfigurationKey<Boolean>("Enable/disable debug logging on the given compilation")
 
@@ -34,14 +43,5 @@ class KikCommandLineProcessor : CommandLineProcessor {
                 required = false,
                 allowMultipleOccurrences = false,
             )
-    }
-
-    override val pluginId = "org.erwinkok.kik.kik-compiler-plugin"
-    override val pluginOptions = listOf(ENABLED_OPTION, DEBUG_OPTION)
-
-    override fun processOption(option: AbstractCliOption, value: String, configuration: CompilerConfiguration) = when (option) {
-        ENABLED_OPTION -> configuration.put(KEY_ENABLED, value.toBoolean())
-        DEBUG_OPTION -> configuration.put(KEY_DEBUG, value.toBoolean())
-        else -> throw CliOptionProcessingException("Unknown option: ${option.optionName}")
     }
 }
