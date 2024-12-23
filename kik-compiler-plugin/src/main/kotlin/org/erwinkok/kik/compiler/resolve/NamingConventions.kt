@@ -3,6 +3,7 @@ package org.erwinkok.kik.compiler.resolve
 
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 
 internal object KikAnnotations {
     val kikTypeAnnotationFqName = FqName("org.erwinkok.kik.typesystem.KikType")
@@ -14,4 +15,12 @@ internal object KikAnnotations {
     val kikTypePartAnnotationClassId = ClassId.topLevel(kikTypePartAnnotationFqName)
     val kikPropertyAnnotationClassId = ClassId.topLevel(kikPropertyAnnotationFqName)
     val kikInlineAnnotationClassId = ClassId.topLevel(kikInlineAnnotationFqName)
+}
+
+internal object AnnotationParameterNames {
+    val GROUP = Name.identifier("group")
+    val VERSION = Name.identifier("version")
+    val KIND = Name.identifier("kind")
+    val NAME = Name.identifier("name")
+    val REQUIRED = Name.identifier("required")
 }

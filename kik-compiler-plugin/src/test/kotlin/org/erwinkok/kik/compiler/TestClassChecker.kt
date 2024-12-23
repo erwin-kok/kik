@@ -106,6 +106,24 @@ internal class TestClassChecker {
     }
 
     @Test
+    fun `abstract classes can not be annotated with KikType`() {
+        val inner = kotlin(
+            "Abstract.kt",
+            """
+            package org.erwinkok.kik.typesystem.compiler.test
+            
+            import org.erwinkok.kik.typesystem.KikType
+                
+            @KikType(group = "AGroup", version = "AVersion", kind = "AKind")
+            abstract class Test           
+            """.trimIndent()
+        )
+        val result = prepare(inner).compile()
+        assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
+        assertContains(result.messages, "Abstract classes cannot be annotated with @KikType.")
+    }
+
+    @Test
     fun `type parameters`() {
         val typeParameters = kotlin(
             "TypeParams.kt",
@@ -121,5 +139,47 @@ internal class TestClassChecker {
         val result = prepare(typeParameters).compile()
         assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
         assertContains(result.messages, "Class annotated with @KikType has one or more type parameters")
+    }
+
+    @Test
+    fun `companion object`() {
+        val companion = kotlin(
+            "Companion.kt",
+            """
+            package org.erwinkok.kik.typesystem.compiler.test
+            
+            import org.erwinkok.kik.typesystem.KikType
+
+            @KikType(group = "AGroup", version = "AVersion", kind = "AKind")
+            class TestClass {
+                companion object CompanionObject                               
+            }
+            """.trimIndent()
+        )
+        val result = prepare(companion).compile()
+        assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
+        assertContains(result.messages, "Class annotated with @KikType has a companion object")
+    }
+
+    @Test
+    fun `duplicate enum properties`() {
+        val companion = kotlin(
+            "DuplicateEnumProp.kt",
+            """
+            package org.erwinkok.kik.typesystem.compiler.test
+            
+            import org.erwinkok.kik.typesystem.KikProperty
+           
+            enum class TestEnum {
+                @KikProperty("A")
+                A,
+                @KikProperty("A")
+                B                               
+            }
+            """.trimIndent()
+        )
+        val result = prepare(companion).compile()
+        assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
+        assertContains(result.messages, "Enum class 'enum class TestEnum : Enum<TestEnum>' has duplicate property name 'A' in entry 'B'")
     }
 }
