@@ -7,6 +7,8 @@ import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 
 internal class FirKikExtensionRegistrar : FirExtensionRegistrar() {
     override fun ExtensionRegistrarContext.configurePlugin() {
+        +::FirKikResolveExtension
+        +::FirKikSupertypesExtension
         +::FirKikCheckersComponent
 
         // services

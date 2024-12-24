@@ -9,6 +9,7 @@ import org.erwinkok.kik.compiler.k2.hasKikAnnotation
 import org.erwinkok.kik.compiler.k2.isTypeParameter
 import org.erwinkok.kik.compiler.k2.kikAnnotationSource
 import org.erwinkok.kik.compiler.k2.services.kikPropertiesProvider
+import org.erwinkok.kik.compiler.resolve.KikEntityNames.kikCommonTypeClassId
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.isObject
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
@@ -96,7 +97,7 @@ internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common
                 it.classId
             }
             .filter {
-                it != StandardClassIds.Any && it != StandardClassIds.Enum
+                it != StandardClassIds.Any && it != StandardClassIds.Enum && it.outermostClassId != kikCommonTypeClassId
             }
         if (superClasses.isNotEmpty()) {
             val identifiers = superClasses.joinToString(", ") { it.asFqNameString() }

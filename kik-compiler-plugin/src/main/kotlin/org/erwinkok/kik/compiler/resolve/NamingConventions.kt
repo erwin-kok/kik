@@ -1,9 +1,12 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.resolve
 
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+
+internal val KIK_PLUGIN_ORIGIN = IrDeclarationOriginImpl("KIK_TYPESYSTEM", true)
 
 internal object KikAnnotations {
     val kikTypeAnnotationFqName = FqName("org.erwinkok.kik.typesystem.KikType")
@@ -15,6 +18,39 @@ internal object KikAnnotations {
     val kikTypePartAnnotationClassId = ClassId.topLevel(kikTypePartAnnotationFqName)
     val kikPropertyAnnotationClassId = ClassId.topLevel(kikPropertyAnnotationFqName)
     val kikInlineAnnotationClassId = ClassId.topLevel(kikInlineAnnotationFqName)
+}
+
+internal object KikPackages {
+    val packageFqName = FqName("org.erwinkok.kik.typesystem")
+    val internalPackageFqName = FqName("org.erwinkok.kik.typesystem.internal")
+    val encodingPackageFqName = FqName("org.erwinkok.kik.typesystem.encoding")
+    val descriptorsPackageFqName = FqName("org.erwinkok.kik.typesystem.descriptors")
+    val builtinsPackageFqName = FqName("org.erwinkok.kik.typesystem.builtins")
+
+    val allPublicPackages = listOf(packageFqName, encodingPackageFqName, descriptorsPackageFqName, builtinsPackageFqName)
+}
+
+internal object KikEntityNames {
+    const val SERIALIZE_FUNCTION_NAME = "serialize"
+    const val KIK_CLASS = "\$serializer"
+
+    val KIK_CLASS_NAME = Name.identifier(KIK_CLASS)
+
+    val KIK_TYPE_INTERFACE_NAME = Name.identifier("KikCommonType")
+    val GENERATED_SERIALIZER_CLASS = Name.identifier("GeneratedSerializer")
+    val WRITE_SELF_NAME = Name.identifier("write\$Self")
+    val SERIAL_CTOR_MARKER_NAME = Name.identifier("SerializationConstructorMarker")
+
+    const val STRUCTURE_ENCODER_CLASS = "CompositeEncoder"
+    const val SERIAL_DESCRIPTOR_CLASS = "SerialDescriptor"
+
+    val kikCommonTypeClassId = ClassId(KikPackages.internalPackageFqName, KIK_TYPE_INTERFACE_NAME)
+
+    val dummyParamName = Name.identifier("serializationConstructorMarker")
+}
+
+internal object KikClassIds {
+    val generatedSerializerId = ClassId(KikPackages.internalPackageFqName, KikEntityNames.GENERATED_SERIALIZER_CLASS)
 }
 
 internal object AnnotationParameterNames {

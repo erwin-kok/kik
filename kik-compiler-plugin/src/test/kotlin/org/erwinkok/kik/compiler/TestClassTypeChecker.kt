@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
-internal class TestClassChecker {
+internal class TestClassTypeChecker {
     @Test
     fun `classes can not be have super classes`() {
         val superClass = kotlin(
