@@ -1,7 +1,6 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k2.checkers
 
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.diagnostics.KtDiagnosticFactoryToRendererMap
 import org.jetbrains.kotlin.diagnostics.error0
 import org.jetbrains.kotlin.diagnostics.error1
@@ -24,8 +23,9 @@ internal object FirKikErrors : BaseDiagnosticRendererFactory() {
     val COMPANION_OBJECT_NOT_SUPPORTED by error1<KtAnnotationEntry, String>()
     val DUPLICATE_PROPERTY_NAME_ENUM by error3<KtAnnotationEntry, FirClassSymbol<*>, String, String>()
     val DUPLICATE_PROPERTY_NAME by error1<KtAnnotationEntry, String>()
-    val GENERIC_ARRAY_ELEMENT_NOT_SUPPORTED by error0<PsiElement>()
+    val GENERIC_ARRAY_ELEMENT_NOT_SUPPORTED by error0<KtAnnotationEntry>()
     val PROPERTY_TYPE_PARAMETER_NOT_SUPPORTED by error1<KtAnnotationEntry, FirPropertySymbol>()
+    val PRIMARY_CONSTRUCTOR_PARAMETER_IS_NOT_A_PROPERTY by error0<KtAnnotationEntry>()
 
     override val MAP = KtDiagnosticFactoryToRendererMap("KikTypeSystem").apply {
         put(
@@ -79,6 +79,10 @@ internal object FirKikErrors : BaseDiagnosticRendererFactory() {
             PROPERTY_TYPE_PARAMETER_NOT_SUPPORTED,
             "Property ''{0}'' has type parameters, which is not supported",
             FirDiagnosticRenderers.SYMBOL
+        )
+        put(
+            PRIMARY_CONSTRUCTOR_PARAMETER_IS_NOT_A_PROPERTY,
+            "This class has primary constructor parameters that are not properties, which is not supported",
         )
     }
 

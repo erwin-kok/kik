@@ -162,6 +162,27 @@ internal class TestClassTypeChecker {
     }
 
     @Test
+    fun `constructor properties`() {
+        val companion = kotlin(
+            "Constructor.kt",
+            """
+            package org.erwinkok.kik.typesystem.compiler.test
+            
+            import org.erwinkok.kik.typesystem.KikProperty
+            import org.erwinkok.kik.typesystem.KikType
+
+            @KikType(group = "AGroup", version = "AVersion", kind = "AKind")
+            class TestClass(
+                @KikProperty("A") a: String
+            )          
+            """.trimIndent()
+        )
+        val result = prepare(companion).compile()
+        assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
+        assertContains(result.messages, "This class has primary constructor parameters that are not properties, which is not supported")
+    }
+
+    @Test
     fun `duplicate enum properties`() {
         val companion = kotlin(
             "DuplicateEnumProp.kt",

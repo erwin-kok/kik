@@ -1,14 +1,14 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k2.checkers
 
-import org.erwinkok.kik.compiler.k2.FirKikProperties
-import org.erwinkok.kik.compiler.k2.FirKikProperty
 import org.erwinkok.kik.compiler.k2.getKikPropertyNameAnnotation
 import org.erwinkok.kik.compiler.k2.getPropertyNameValue
 import org.erwinkok.kik.compiler.k2.hasKikAnnotation
 import org.erwinkok.kik.compiler.k2.isTypeParameter
 import org.erwinkok.kik.compiler.k2.kikAnnotationSource
 import org.erwinkok.kik.compiler.k2.services.kikPropertiesProvider
+import org.erwinkok.kik.compiler.properties.FirKikProperties
+import org.erwinkok.kik.compiler.properties.FirKikProperty
 import org.erwinkok.kik.compiler.resolve.KikEntityNames.kikCommonTypeClassId
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.isObject
@@ -17,13 +17,17 @@ import org.jetbrains.kotlin.diagnostics.reportOn
 import org.jetbrains.kotlin.fir.analysis.checkers.MppCheckerKind
 import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirClassChecker
+import org.jetbrains.kotlin.fir.analysis.checkers.declaration.primaryConstructorSymbol
 import org.jetbrains.kotlin.fir.declarations.FirAnonymousObject
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.collectEnumEntries
+import org.jetbrains.kotlin.fir.declarations.utils.correspondingValueParameterFromPrimaryConstructor
 import org.jetbrains.kotlin.fir.declarations.utils.isAbstract
 import org.jetbrains.kotlin.fir.declarations.utils.isEnumClass
 import org.jetbrains.kotlin.fir.declarations.utils.isInner
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
+import org.jetbrains.kotlin.fir.scopes.impl.declaredMemberScope
+import org.jetbrains.kotlin.fir.scopes.processAllProperties
 import org.jetbrains.kotlin.fir.symbols.impl.FirAnonymousObjectSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirEnumEntrySymbol
@@ -34,6 +38,7 @@ import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.isNonPrimitiveArray
 import org.jetbrains.kotlin.fir.types.type
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.utils.addIfNotNull
 
 internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common) {
     override fun check(declaration: FirClass, context: CheckerContext, reporter: DiagnosticReporter) {
@@ -50,6 +55,7 @@ internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common
             ::checkAbstractClass,
             ::checkTypeParameters,
             ::checkCompanion,
+            ::checkConstructorParameters,
         )
         classCheckers.forEach { checker ->
             if (checker(declaration, context, reporter)) {
@@ -159,6 +165,27 @@ internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common
         val companionObjectSymbol = classSymbol.companionObjectSymbol
         if (companionObjectSymbol != null) {
             reporter.reportOn(classSymbol.kikAnnotationSource(context.session), FirKikErrors.COMPANION_OBJECT_NOT_SUPPORTED, companionObjectSymbol.name.identifier, context)
+            return true
+        }
+        return false
+    }
+
+    private fun checkConstructorParameters(declaration: FirClass, context: CheckerContext, reporter: DiagnosticReporter): Boolean {
+        val classSymbol = declaration.symbol
+        if (classSymbol.isEnumClass) {
+            return false
+        }
+        val allPropertySymbols = buildList {
+            classSymbol
+                .declaredMemberScope(context.session, memberRequiredPhase = null)
+                .processAllProperties {
+                    addIfNotNull(it as? FirPropertySymbol)
+                }
+        }
+        val primaryConstructorProperties = allPropertySymbols.count { it.correspondingValueParameterFromPrimaryConstructor != null }
+        val primaryConstructorSymbols = classSymbol.primaryConstructorSymbol(context.session)?.valueParameterSymbols?.size ?: 0
+        if (primaryConstructorProperties != primaryConstructorSymbols) {
+            reporter.reportOn(classSymbol.kikAnnotationSource(context.session), FirKikErrors.PRIMARY_CONSTRUCTOR_PARAMETER_IS_NOT_A_PROPERTY, context)
             return true
         }
         return false
