@@ -3,7 +3,6 @@ package org.erwinkok.kik.compiler.properties
 
 internal interface IKikProperties<S : IKikProperty> {
     val kikProperties: List<S>
-    val isExternallySerializable: Boolean
     val kikConstructorProperties: List<S>
     val kikStandaloneProperties: List<S>
 }

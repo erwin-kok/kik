@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.name.Name
 internal interface IKikProperty {
     val name: String
     val originalDescriptorName: Name
+    val isConstructorParameterWithDefault: Boolean
     val optional: Boolean
     val inline: Boolean
-    val transient: Boolean
 }

@@ -3,6 +3,7 @@
 
 package org.erwinkok.kik.compiler.k1
 
+import org.erwinkok.kik.compiler.properties.IrKikProperties
 import org.jetbrains.kotlin.backend.common.ClassLoweringPass
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -13,5 +14,7 @@ internal class KikClassPreLowering(
     baseContext: IrPluginContext
 ) : IrElementTransformerVoid(), ClassLoweringPass {
     override fun lower(irClass: IrClass) {
+        val kikProperties = IrKikProperties.fromIrClass(irClass)
+
     }
 }
