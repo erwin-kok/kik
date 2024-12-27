@@ -6,13 +6,6 @@ package org.erwinkok.kik.compiler.properties
 import org.erwinkok.kik.compiler.k1.kikInline
 import org.erwinkok.kik.compiler.k1.kikPropertyNameValue
 import org.erwinkok.kik.compiler.k1.kikPropertyRequiredValue
-import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.descriptors.PropertyDescriptor
-import org.jetbrains.kotlin.fir.declarations.impl.FirDefaultPropertyGetter
-import org.jetbrains.kotlin.fir.declarations.impl.FirPrimaryConstructor
-import org.jetbrains.kotlin.fir.deserialization.registeredInSerializationPluginMetadataExtension
-import org.jetbrains.kotlin.fir.lazy.Fir2IrLazyProperty
-import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrProperty
@@ -22,10 +15,6 @@ import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.util.hasDefaultValue
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.ir.util.properties
-import org.jetbrains.kotlin.psi.KtDeclarationWithInitializer
-import org.jetbrains.kotlin.psi.KtParameter
-import org.jetbrains.kotlin.resolve.source.getPsi
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedPropertyDescriptor
 
 internal class IrKikProperty(
     val property: IrProperty,
@@ -52,11 +41,10 @@ internal class IrKikProperties(
                 .map { property ->
                     val isConstructorParameterWithDefault = primaryConstructorProperties.getValue(property)
                     val declaresDefaultValue = hasInitializer(property)
-                    val isPropertyFromAnotherModuleDeclaresDefaultValue = analyzeIfFromAnotherModule1(property)
                     IrKikProperty(
                         property,
                         isConstructorParameterWithDefault,
-                        declaresDefaultValue || isConstructorParameterWithDefault || isPropertyFromAnotherModuleDeclaresDefaultValue
+                        declaresDefaultValue || isConstructorParameterWithDefault
                     )
                 }
                 .partition { it.property in primaryConstructorProperties }
@@ -90,78 +78,11 @@ internal class IrKikProperties(
             if (property.annotations.kikPropertyNameValue == null) {
                 return false
             }
-            val isPropertyWithBackingFieldFromAnotherModule = analyzeIfFromAnotherModule2(property)
             val hasBackingField = when (property.origin) {
-                IrDeclarationOrigin.IR_EXTERNAL_DECLARATION_STUB -> isPropertyWithBackingFieldFromAnotherModule
+                IrDeclarationOrigin.IR_EXTERNAL_DECLARATION_STUB -> false
                 else -> property.backingField != null
             }
             return hasBackingField
-        }
-
-        @OptIn(ObsoleteDescriptorBasedAPI::class)
-        private fun analyzeIfFromAnotherModule1(property: IrProperty): Boolean {
-            if (property.descriptor is DeserializedPropertyDescriptor) {
-                // IrLazyProperty does not deserialize backing fields correctly, so we should fall back to info from descriptor.
-                // DeserializedPropertyDescriptor can be encountered only after K1, so it is safe to check it.
-                return property.descriptor.declaresDefaultValue()
-            }
-            if (property !is Fir2IrLazyProperty) {
-                return false
-            }
-            // Deserialized properties don't contain information about backing field, so we should extract this information from the
-            // attribute, which is set if the property was mentioned in SerializationPluginMetadataExtensions.
-            // Also, deserialized properties do not store default value (initializer expression) for property,
-            // so we either should find corresponding constructor parameter and check its default, or rely on less strict check for default getter.
-            // Comments are copied from PropertyDescriptor.declaresDefaultValue() as it has similar logic.
-            val matchingPrimaryConstructorParam = property.containingClass?.declarations?.filterIsInstance<FirPrimaryConstructor>()
-                ?.singleOrNull()?.valueParameters?.find { it.name == property.name }
-            return if (matchingPrimaryConstructorParam != null) {
-                // If property is a constructor parameter, check parameter default value
-                // (serializable classes always have parameters-as-properties, so no name clash here)
-                matchingPrimaryConstructorParam.defaultValue != null
-            } else {
-                // If it is a body property, then it is likely to have initializer when getter is not specified
-                // note this approach is not working well if we have smth like `get() = field`, but such cases on cross-module boundaries
-                // should be very marginal. If we want to solve them, we need to add protobuf metadata extension.
-                property.fir.getter is FirDefaultPropertyGetter
-            }
-        }
-
-        @OptIn(ObsoleteDescriptorBasedAPI::class)
-        private fun analyzeIfFromAnotherModule2(property: IrProperty): Boolean {
-            if (property.descriptor is DeserializedPropertyDescriptor) {
-                // IrLazyProperty does not deserialize backing fields correctly, so we should fall back to info from descriptor.
-                // DeserializedPropertyDescriptor can be encountered only after K1, so it is safe to check it.
-                return property.descriptor.backingField != null || property.descriptor.declaresDefaultValue()
-            }
-            if (property !is Fir2IrLazyProperty) {
-                return false
-            }
-            // Deserialized properties don't contain information about backing field, so we should extract this information from the
-            // attribute, which is set if the property was mentioned in SerializationPluginMetadataExtensions.
-            // Also, deserialized properties do not store default value (initializer expression) for property,
-            // so we either should find corresponding constructor parameter and check its default, or rely on less strict check for default getter.
-            // Comments are copied from PropertyDescriptor.declaresDefaultValue() as it has similar logic.
-            return property.fir.symbol.registeredInSerializationPluginMetadataExtension
-        }
-
-        private fun PropertyDescriptor.declaresDefaultValue(): Boolean {
-            when (val declaration = this.source.getPsi()) {
-                is KtDeclarationWithInitializer -> return declaration.initializer != null
-                is KtParameter -> return declaration.defaultValue != null
-                is Any -> return false // Not-null check
-            }
-            // PSI is null, property is from another module
-            if (this !is DeserializedPropertyDescriptor) return false
-            val myClassCtor = (this.containingDeclaration as? ClassDescriptor)?.unsubstitutedPrimaryConstructor ?: return false
-            // If property is a constructor parameter, check parameter default value
-            // (serializable classes always have parameters-as-properties, so no name clash here)
-            if (myClassCtor.valueParameters.find { it.name == this.name }?.declaresDefaultValue() == true) return true
-            // If it is a body property, then it is likely to have initializer when getter is not specified
-            // note this approach is not working well if we have smth like `get() = field`, but such cases on cross-module boundaries
-            // should be very marginal. If we want to solve them, we need to add protobuf metadata extension.
-            if (getter?.isDefault == true) return true
-            return false
         }
     }
 }

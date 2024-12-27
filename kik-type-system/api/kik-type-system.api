@@ -1,0 +1,23 @@
+public abstract interface annotation class org/erwinkok/kik/typesystem/KikInline : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class org/erwinkok/kik/typesystem/KikProperty : java/lang/annotation/Annotation {
+	public abstract fun name ()Ljava/lang/String;
+	public abstract fun required ()Z
+}
+
+public abstract interface annotation class org/erwinkok/kik/typesystem/KikType : java/lang/annotation/Annotation {
+	public abstract fun group ()Ljava/lang/String;
+	public abstract fun kind ()Ljava/lang/String;
+	public abstract fun version ()Ljava/lang/String;
+}
+
+public abstract interface annotation class org/erwinkok/kik/typesystem/KikTypePart : java/lang/annotation/Annotation {
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/internal/KikCommonType {
+}
+
+public final class org/erwinkok/kik/typesystem/internal/SerializationConstructorMarker {
+}
+

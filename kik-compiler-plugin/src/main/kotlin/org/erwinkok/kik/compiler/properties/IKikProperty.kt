@@ -10,3 +10,5 @@ internal interface IKikProperty {
     val optional: Boolean
     val inline: Boolean
 }
+
+internal fun List<IKikProperty>.bitMaskSlotCount(): Int = size / 32 + 1

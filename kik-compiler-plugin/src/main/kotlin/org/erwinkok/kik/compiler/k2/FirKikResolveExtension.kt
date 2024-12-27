@@ -27,7 +27,7 @@ internal class FirKikResolveExtension(session: FirSession) : FirDeclarationGener
             result += SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT
         }
         if (classSymbol.hasKikAnnotation(session)) {
-            result += KikEntityNames.KIK_CLASS_NAME
+            result += KikEntityNames.SERIALIZER_CLASS_NAME
         }
         return result
     }
@@ -45,7 +45,7 @@ internal class FirKikResolveExtension(session: FirSession) : FirDeclarationGener
         }
         val result = when (name) {
             SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT -> generateCompanionDeclaration(owner)
-            KikEntityNames.KIK_CLASS_NAME -> generateSerializerImplClass(owner)
+            KikEntityNames.SERIALIZER_CLASS_NAME -> generateSerializerImplClass(owner)
             else -> error("Can't generate class ${owner.classId.createNestedClassId(name).asSingleFqName()}")
         }
         return result
@@ -53,14 +53,14 @@ internal class FirKikResolveExtension(session: FirSession) : FirDeclarationGener
 
     private fun generateCompanionDeclaration(owner: FirRegularClassSymbol): FirRegularClassSymbol? {
         if (owner.companionObjectSymbol != null) return null
-        val companion = createCompanionObject(owner, FirKikPluginKey)
+        val companion = createCompanionObject(owner, KikPluginKey)
         return companion.symbol
     }
 
     private fun generateSerializerImplClass(owner: FirRegularClassSymbol): FirClassLikeSymbol<*> {
         val hasTypeParams = owner.typeParameterSymbols.isNotEmpty()
         val serializerKind = if (hasTypeParams) ClassKind.CLASS else ClassKind.OBJECT
-        val serializerFirClass = createNestedClass(owner, KikEntityNames.KIK_CLASS_NAME, FirKikPluginKey, serializerKind) {
+        val serializerFirClass = createNestedClass(owner, KikEntityNames.SERIALIZER_CLASS_NAME, KikPluginKey, serializerKind) {
             modality = Modality.FINAL
 
             for (parameter in owner.typeParameterSymbols) {

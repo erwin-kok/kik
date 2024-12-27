@@ -32,19 +32,18 @@ internal object KikPackages {
 
 internal object KikEntityNames {
     const val SERIALIZE_FUNCTION_NAME = "serialize"
-    const val KIK_CLASS = "\$serializer"
-
-    val KIK_CLASS_NAME = Name.identifier(KIK_CLASS)
-
-    val KIK_TYPE_INTERFACE_NAME = Name.identifier("KikCommonType")
-    val GENERATED_SERIALIZER_CLASS = Name.identifier("GeneratedSerializer")
-    val WRITE_SELF_NAME = Name.identifier("write\$Self")
-    val SERIAL_CTOR_MARKER_NAME = Name.identifier("SerializationConstructorMarker")
-
+    const val SERIALIZER_CLASS = "\$serializer"
     const val STRUCTURE_ENCODER_CLASS = "CompositeEncoder"
     const val SERIAL_DESCRIPTOR_CLASS = "SerialDescriptor"
 
+    val KIK_TYPE_INTERFACE_NAME = Name.identifier("KikCommonType")
+    val GENERATED_SERIALIZER_CLASS = Name.identifier("GeneratedSerializer")
+    val SERIAL_CTOR_MARKER_NAME = Name.identifier("SerializationConstructorMarker")
+
     val kikCommonTypeClassId = ClassId(KikPackages.internalPackageFqName, KIK_TYPE_INTERFACE_NAME)
+
+    val SERIALIZER_CLASS_NAME = Name.identifier(SERIALIZER_CLASS)
+    val WRITE_SELF_NAME = Name.identifier("write\$Self")
 
     val dummyParamName = Name.identifier("serializationConstructorMarker")
 }
