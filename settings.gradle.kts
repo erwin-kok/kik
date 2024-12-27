@@ -28,3 +28,5 @@ includeBuild("kik-compiler-plugin")
 includeBuild("kik-gradle-plugin")
 
 include(":kik-type-system")
+
+include(":kik-example")
