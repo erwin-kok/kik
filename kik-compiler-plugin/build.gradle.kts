@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compatibility)
     alias(libs.plugins.testlogger)
+    alias(libs.plugins.buildConfig)
 }
 
 group = "org.erwinkok.kik"

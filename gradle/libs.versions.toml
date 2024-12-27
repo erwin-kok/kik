@@ -9,6 +9,7 @@ compatibility-plugin = "0.16.3"
 ksp-plugin = "2.1.0-1.0.29"
 testlogger-plugin = "4.0.0"
 versions-plugin = "0.51.0"
+buildconfig-plugin = "5.5.1"
 
 [libraries]
 kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
@@ -26,4 +27,4 @@ compatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", v
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-plugin" }
 testlogger = { id = "com.adarshr.test-logger", version.ref = "testlogger-plugin" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions-plugin" }
-
+buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig-plugin" }

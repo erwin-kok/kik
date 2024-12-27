@@ -1,3 +1,4 @@
+// Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 @file:Suppress("UnstableApiUsage")
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -7,6 +8,7 @@ plugins {
     idea
     kotlin("jvm") version "2.1.0"
     id("java-gradle-plugin")
+    alias(libs.plugins.buildConfig)
 }
 
 group = "org.erwinkok.kik.gradleplugin"
