@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.buildConfig)
 }
 
-group = "org.erwinkok.kik.gradleplugin"
+group = "org.erwinkok.kik"
 version = "0.1.0"
 
 gradlePlugin {
