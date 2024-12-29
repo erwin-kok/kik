@@ -25,5 +25,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "kik-gradle-plugin"
-
-include(":typesystem")

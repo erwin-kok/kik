@@ -6,10 +6,8 @@ plugins {
     idea
     kotlin("jvm")
     com.adarshr.`test-logger`
+    id("org.erwinkok.kik.compiler-plugin")
 }
-
-group = "org.erwinkok.kik"
-version = "0.1.0"
 
 testlogger {
     theme = ThemeType.MOCHA
