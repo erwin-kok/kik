@@ -15,7 +15,17 @@ public abstract interface annotation class org/erwinkok/kik/typesystem/KikType :
 public abstract interface annotation class org/erwinkok/kik/typesystem/KikTypePart : java/lang/annotation/Annotation {
 }
 
+public abstract interface class org/erwinkok/kik/typesystem/internal/BaseRealmObject {
+}
+
 public abstract interface class org/erwinkok/kik/typesystem/internal/KikCommonType {
+	public abstract fun getKind ()Lorg/erwinkok/kik/typesystem/internal/RealmObjectReference;
+	public abstract fun getXxx ()Ljava/lang/Object;
+	public abstract fun setKind (Lorg/erwinkok/kik/typesystem/internal/RealmObjectReference;)V
+}
+
+public final class org/erwinkok/kik/typesystem/internal/RealmObjectReference {
+	public fun <init> ()V
 }
 
 public final class org/erwinkok/kik/typesystem/internal/SerializationConstructorMarker {

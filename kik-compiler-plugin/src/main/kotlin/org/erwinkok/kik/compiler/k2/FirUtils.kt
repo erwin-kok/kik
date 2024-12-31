@@ -1,9 +1,9 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k2
 
-import org.erwinkok.kik.compiler.resolve.AnnotationParameterNames
-import org.erwinkok.kik.compiler.resolve.KikAnnotations
-import org.erwinkok.kik.compiler.resolve.KikAnnotations.kikPropertyAnnotationClassId
+import org.erwinkok.kik.compiler.AnnotationParameterNames
+import org.erwinkok.kik.compiler.KikAnnotations
+import org.erwinkok.kik.compiler.KikAnnotations.kikPropertyAnnotationClassId
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.isEnumClass

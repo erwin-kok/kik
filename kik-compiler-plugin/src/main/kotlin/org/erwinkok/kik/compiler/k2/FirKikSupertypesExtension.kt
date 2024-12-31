@@ -1,8 +1,8 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k2
 
+import org.erwinkok.kik.compiler.KikClassIds.kikCommonTypeClassId
 import org.erwinkok.kik.compiler.k2.FirKikPredicates.annotatedWithKikType
-import org.erwinkok.kik.compiler.resolve.KikEntityNames.kikCommonTypeClassId
 import org.jetbrains.kotlin.descriptors.isClass
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClass

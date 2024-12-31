@@ -1,7 +1,7 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k1
 
-import org.erwinkok.kik.compiler.resolve.KikPackages
+import org.erwinkok.kik.compiler.KikPackages
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.name.ClassId

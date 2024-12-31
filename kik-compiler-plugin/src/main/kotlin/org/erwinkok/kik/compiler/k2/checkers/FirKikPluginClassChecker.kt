@@ -1,6 +1,7 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k2.checkers
 
+import org.erwinkok.kik.compiler.KikClassIds.kikCommonTypeClassId
 import org.erwinkok.kik.compiler.k2.getKikPropertyNameAnnotation
 import org.erwinkok.kik.compiler.k2.getPropertyNameValue
 import org.erwinkok.kik.compiler.k2.hasKikAnnotation
@@ -9,7 +10,6 @@ import org.erwinkok.kik.compiler.k2.kikAnnotationSource
 import org.erwinkok.kik.compiler.k2.services.kikPropertiesProvider
 import org.erwinkok.kik.compiler.properties.FirKikProperties
 import org.erwinkok.kik.compiler.properties.FirKikProperty
-import org.erwinkok.kik.compiler.resolve.KikEntityNames.kikCommonTypeClassId
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.isObject
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter

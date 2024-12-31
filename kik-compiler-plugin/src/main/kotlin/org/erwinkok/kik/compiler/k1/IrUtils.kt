@@ -3,29 +3,36 @@
 
 package org.erwinkok.kik.compiler.k1
 
+import org.erwinkok.kik.compiler.KikAnnotations
+import org.erwinkok.kik.compiler.KikEntityNames
+import org.erwinkok.kik.compiler.KikPackages
 import org.erwinkok.kik.compiler.k2.KikPluginKey
-import org.erwinkok.kik.compiler.resolve.KikAnnotations
-import org.erwinkok.kik.compiler.resolve.KikEntityNames
-import org.erwinkok.kik.compiler.resolve.KikPackages
+import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.backend.jvm.ir.getStringConstArgument
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
+import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
+import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrConstructorCall
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
+import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.util.findAnnotation
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getAnnotation
+import org.jetbrains.kotlin.name.ClassId
 
 internal val IrClass.isSerializable: Boolean
     get() {
@@ -95,3 +102,14 @@ internal fun IrConstructor.isSerializationCtor(): Boolean {
         name == KikEntityNames.dummyParamName && type.classFqName == KikPackages.internalPackageFqName.child(KikEntityNames.SERIAL_CTOR_MARKER_NAME)
     } == true
 }
+
+internal fun IrPluginContext.lookupClassOrThrow(name: ClassId): IrClass {
+    return referenceClass(name)?.owner
+        ?: error("Cannot find ${name.asString()} on platform $platform.")
+}
+
+internal fun IrPluginContext.blockBody(
+    symbol: IrSymbol,
+    block: IrBlockBodyBuilder.() -> Unit
+): IrBlockBody =
+    DeclarationIrBuilder(this, symbol).irBlockBody { block() }

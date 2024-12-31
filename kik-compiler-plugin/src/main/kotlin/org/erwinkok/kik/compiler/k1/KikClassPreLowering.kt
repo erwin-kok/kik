@@ -3,10 +3,11 @@
 
 package org.erwinkok.kik.compiler.k1
 
+import org.erwinkok.kik.compiler.KIK_PLUGIN_ORIGIN
+import org.erwinkok.kik.compiler.KikClassIds.kikCommonTypeClassId
+import org.erwinkok.kik.compiler.KikEntityNames
 import org.erwinkok.kik.compiler.properties.IrKikProperties
 import org.erwinkok.kik.compiler.properties.bitMaskSlotCount
-import org.erwinkok.kik.compiler.resolve.KIK_PLUGIN_ORIGIN
-import org.erwinkok.kik.compiler.resolve.KikEntityNames
 import org.jetbrains.kotlin.backend.common.ClassLoweringPass
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -32,9 +33,9 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 
 internal class KikClassPreLowering(
-    baseContext: IrPluginContext
+    val pluginContext: IrPluginContext
 ) : IrElementTransformerVoid(), ClassLoweringPass {
-    private val compilerContext = KikPluginContext(baseContext)
+    private val compilerContext = KikPluginContext(pluginContext)
 
     override fun lower(irClass: IrClass) {
         if (!irClass.isSerializable) {
@@ -43,6 +44,15 @@ internal class KikClassPreLowering(
         if (irClass.isSingleFieldValueClass) {
             return
         }
+        val commonTypeSymbol = compilerContext.lookupClassOrThrow(kikCommonTypeClassId).symbol
+        irClass.superTypes += commonTypeSymbol.defaultType
+
+
+        // Generate RealmObjectInternal properties overrides
+        val generator = KikModelSyntheticPropertiesGeneration(pluginContext)
+        generator.addKikCommonTypeInternalProperties(irClass)
+
+
 //        preGenerateWriteSelfMethodIfNeeded(irClass)
 //        preGenerateDeserializationConstructorIfNeeded(irClass)
     }

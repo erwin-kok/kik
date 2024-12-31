@@ -1,6 +1,7 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
-package org.erwinkok.kik.compiler.resolve
+package org.erwinkok.kik.compiler
 
+import org.erwinkok.kik.compiler.KikPackages.internalPackageFqName
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -40,16 +41,23 @@ internal object KikEntityNames {
     val GENERATED_SERIALIZER_CLASS = Name.identifier("GeneratedSerializer")
     val SERIAL_CTOR_MARKER_NAME = Name.identifier("SerializationConstructorMarker")
 
-    val kikCommonTypeClassId = ClassId(KikPackages.internalPackageFqName, KIK_TYPE_INTERFACE_NAME)
 
     val SERIALIZER_CLASS_NAME = Name.identifier(SERIALIZER_CLASS)
     val WRITE_SELF_NAME = Name.identifier("write\$Self")
 
     val dummyParamName = Name.identifier("serializationConstructorMarker")
+
+    val OBJECT_REFERENCE = Name.identifier("kind")
+    val SET = Name.special("<set-?>")
+
 }
 
 internal object KikClassIds {
-    val generatedSerializerId = ClassId(KikPackages.internalPackageFqName, KikEntityNames.GENERATED_SERIALIZER_CLASS)
+    val generatedSerializerId = ClassId(internalPackageFqName, KikEntityNames.GENERATED_SERIALIZER_CLASS)
+    val kikCommonTypeClassId = ClassId(internalPackageFqName, KikEntityNames.KIK_TYPE_INTERFACE_NAME)
+
+    val OBJECT_REFERENCE_CLASS = ClassId(internalPackageFqName, Name.identifier("RealmObjectReference"))
+
 }
 
 internal object AnnotationParameterNames {
