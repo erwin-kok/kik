@@ -1,5 +1,12 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
+buildscript {
+    dependencies {
+        // Add our own kik-gradle-plugin on the class path, so modules can take use of it.
+        classpath("org.erwinkok.kik:kik-gradle-plugin")
+    }
+}
+
 plugins {
     alias(libs.plugins.versions)
 }
@@ -18,12 +25,4 @@ tasks.withType<DependencyUpdatesTask> {
     rejectVersionIf {
         isNonStable(candidate.version)
     }
-}
-
-tasks.register("build") {
-    dependsOn(gradle.includedBuild("kik-compiler-plugin").task(":build"))
-}
-
-tasks.register("clean") {
-    dependsOn(gradle.includedBuild("kik-compiler-plugin").task(":clean"))
 }

@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     idea
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm")
     alias(libs.plugins.ksp)
     alias(libs.plugins.compatibility)
     alias(libs.plugins.testlogger)
@@ -20,11 +20,11 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation(gradleApi())
     implementation(libs.kotlin.compiler.embeddable)
     implementation(libs.auto.service)
     implementation(libs.auto.service.annotations)
     ksp(libs.auto.service.ksp)
+    implementation(projects.kikTypeSystem)
 
     testImplementation(libs.kotlin.compile.testing)
     testImplementation(libs.kotlin.test)

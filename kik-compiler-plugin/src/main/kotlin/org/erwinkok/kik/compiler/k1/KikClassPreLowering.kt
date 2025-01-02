@@ -3,10 +3,11 @@
 
 package org.erwinkok.kik.compiler.k1
 
+import org.erwinkok.kik.compiler.KIK_PLUGIN_ORIGIN
+import org.erwinkok.kik.compiler.KikClassIds.kikCommonTypeClassId
+import org.erwinkok.kik.compiler.KikEntityNames
 import org.erwinkok.kik.compiler.properties.IrKikProperties
 import org.erwinkok.kik.compiler.properties.bitMaskSlotCount
-import org.erwinkok.kik.compiler.resolve.KIK_PLUGIN_ORIGIN
-import org.erwinkok.kik.compiler.resolve.KikEntityNames
 import org.jetbrains.kotlin.backend.common.ClassLoweringPass
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -32,9 +33,9 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 
 internal class KikClassPreLowering(
-    baseContext: IrPluginContext
+    pluginContext: IrPluginContext
 ) : IrElementTransformerVoid(), ClassLoweringPass {
-    private val compilerContext = KikPluginContext(baseContext)
+    private val compilerContext = KikPluginContext(pluginContext)
 
     override fun lower(irClass: IrClass) {
         if (!irClass.isSerializable) {
@@ -43,8 +44,11 @@ internal class KikClassPreLowering(
         if (irClass.isSingleFieldValueClass) {
             return
         }
-//        preGenerateWriteSelfMethodIfNeeded(irClass)
-//        preGenerateDeserializationConstructorIfNeeded(irClass)
+        val commonTypeSymbol = compilerContext.lookupClassOrThrow(kikCommonTypeClassId).symbol
+        irClass.superTypes += commonTypeSymbol.defaultType
+
+        preGenerateWriteSelfMethodIfNeeded(irClass)
+        preGenerateDeserializationConstructorIfNeeded(irClass)
     }
 
     private fun preGenerateWriteSelfMethodIfNeeded(irClass: IrClass) {
@@ -91,7 +95,7 @@ internal class KikClassPreLowering(
             method.annotations += IrConstructorCallImpl.fromSymbolOwner(method.startOffset, method.endOffset, annotationType, annotationCtor)
         }
 
-//        compilerContext.metadataDeclarationRegistrar.registerFunctionAsMetadataVisible(method)
+        compilerContext.metadataDeclarationRegistrar.registerFunctionAsMetadataVisible(method)
     }
 
     private fun preGenerateDeserializationConstructorIfNeeded(irClass: IrClass) {
@@ -118,7 +122,7 @@ internal class KikClassPreLowering(
 
         ctor.addValueParameter(KikEntityNames.dummyParamName, markerClassSymbol.defaultType.makeNullable(), KIK_PLUGIN_ORIGIN)
 
-//        compilerContext.metadataDeclarationRegistrar.registerConstructorAsMetadataVisible(ctor)
+        compilerContext.metadataDeclarationRegistrar.registerConstructorAsMetadataVisible(ctor)
     }
 
     private fun IrType.makeNullableIfNotPrimitive(): IrType {

@@ -6,7 +6,6 @@ plugins {
     idea
     kotlin("jvm")
     com.adarshr.`test-logger`
-    id("org.erwinkok.kik.compiler-plugin")
 }
 
 testlogger {

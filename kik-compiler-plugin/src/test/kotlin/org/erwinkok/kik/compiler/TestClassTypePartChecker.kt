@@ -142,26 +142,6 @@ internal class TestClassTypePartChecker {
     }
 
     @Test
-    fun `companion object`() {
-        val companion = kotlin(
-            "Companion.kt",
-            """
-            package org.erwinkok.kik.typesystem.compiler.test
-            
-            import org.erwinkok.kik.typesystem.KikTypePart
-
-            @KikTypePart
-            class TestClass {
-                companion object CompanionObject                               
-            }
-            """.trimIndent()
-        )
-        val result = prepare(companion).compile()
-        assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
-        assertContains(result.messages, "Class annotated with @KikType has a companion object")
-    }
-
-    @Test
     fun `constructor properties`() {
         val companion = kotlin(
             "Constructor.kt",

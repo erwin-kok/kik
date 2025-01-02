@@ -13,7 +13,6 @@ repositories {
 dependencies {
     implementation(libs.kotlin.gradlePlugin)
     implementation(libs.testlogger.gradlePlugin)
-    implementation("org.erwinkok.kik:kik-gradle-plugin")
 
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
