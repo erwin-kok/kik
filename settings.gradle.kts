@@ -24,14 +24,12 @@ plugins {
 
 rootProject.name = "kik"
 
-includeBuild("kik-compiler-plugin")
-
 includeBuild("kik-gradle-plugin") {
     dependencySubstitution {
         substitute(module("org.erwinkok.kik:kik-gradle-plugin")).using(project(":"))
     }
 }
 
+include(":kik-compiler-plugin")
 include(":kik-type-system")
-
 include(":kik-example")

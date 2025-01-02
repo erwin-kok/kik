@@ -6,8 +6,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     idea
-    kotlin("jvm") version "2.1.0"
-    id("java-gradle-plugin")
+    `java-gradle-plugin`
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.buildConfig)
 }
 
@@ -30,11 +30,8 @@ gradlePlugin {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation(gradleApi())
-}
-
-dependencies {
-    add("compileOnly", kotlin("gradle-plugin"))
+    implementation(libs.kotlin.gradlePlugin)
+    implementation(libs.kotlin.gradlePluginApi)
 }
 
 tasks.withType<KotlinCompile>().configureEach {

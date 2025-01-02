@@ -15,9 +15,249 @@ public abstract interface annotation class org/erwinkok/kik/typesystem/KikType :
 public abstract interface annotation class org/erwinkok/kik/typesystem/KikTypePart : java/lang/annotation/Annotation {
 }
 
+public abstract class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind : org/erwinkok/kik/typesystem/descriptors/SerialKind {
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$BOOLEAN : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$BOOLEAN;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$BYTE : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$BYTE;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$CHAR : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$CHAR;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$DOUBLE : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$DOUBLE;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$FLOAT : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$FLOAT;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$INT : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$INT;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$LONG : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$LONG;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$SHORT : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$SHORT;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/PrimitiveKind$STRING : org/erwinkok/kik/typesystem/descriptors/PrimitiveKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/PrimitiveKind$STRING;
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/descriptors/SerialDescriptor {
+	public abstract fun getAnnotations ()Ljava/util/List;
+	public abstract fun getElementAnnotations (I)Ljava/util/List;
+	public abstract fun getElementDescriptor (I)Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;
+	public abstract fun getElementIndex (Ljava/lang/String;)I
+	public abstract fun getElementName (I)Ljava/lang/String;
+	public abstract fun getElementsCount ()I
+	public abstract fun getKind ()Lorg/erwinkok/kik/typesystem/descriptors/SerialKind;
+	public abstract fun getSerialName ()Ljava/lang/String;
+	public abstract fun isElementOptional (I)Z
+	public abstract fun isInline ()Z
+	public abstract fun isNullable ()Z
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/SerialDescriptor$DefaultImpls {
+	public static fun getAnnotations (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Ljava/util/List;
+	public static fun isInline (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Z
+	public static fun isNullable (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Z
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/SerialDescriptorKt {
+	public static final fun getElementDescriptors (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Ljava/lang/Iterable;
+	public static final fun getElementNames (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Ljava/lang/Iterable;
+}
+
+public abstract class org/erwinkok/kik/typesystem/descriptors/SerialKind {
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/SerialKind$ENUM : org/erwinkok/kik/typesystem/descriptors/SerialKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/SerialKind$ENUM;
+}
+
+public abstract class org/erwinkok/kik/typesystem/descriptors/StructureKind : org/erwinkok/kik/typesystem/descriptors/SerialKind {
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/StructureKind$CLASS : org/erwinkok/kik/typesystem/descriptors/StructureKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/StructureKind$CLASS;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/StructureKind$LIST : org/erwinkok/kik/typesystem/descriptors/StructureKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/StructureKind$LIST;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/StructureKind$MAP : org/erwinkok/kik/typesystem/descriptors/StructureKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/StructureKind$MAP;
+}
+
+public final class org/erwinkok/kik/typesystem/descriptors/StructureKind$OBJECT : org/erwinkok/kik/typesystem/descriptors/StructureKind {
+	public static final field INSTANCE Lorg/erwinkok/kik/typesystem/descriptors/StructureKind$OBJECT;
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/encoding/CompositeDecoder {
+	public static final field Companion Lorg/erwinkok/kik/typesystem/encoding/CompositeDecoder$Companion;
+	public static final field DECODE_DONE I
+	public static final field UNKNOWN_NAME I
+	public abstract fun decodeBooleanElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Z
+	public abstract fun decodeByteElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)B
+	public abstract fun decodeCharElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)C
+	public abstract fun decodeCollectionSize (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)I
+	public abstract fun decodeDoubleElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)D
+	public abstract fun decodeElementIndex (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)I
+	public abstract fun decodeFloatElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)F
+	public abstract fun decodeInlineElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Lorg/erwinkok/kik/typesystem/encoding/Decoder;
+	public abstract fun decodeIntElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)I
+	public abstract fun decodeLongElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)J
+	public abstract fun decodeNullableSerializableElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
+	public abstract fun decodeSequentially ()Z
+	public abstract fun decodeSerializableElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
+	public abstract fun decodeShortElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)S
+	public abstract fun decodeStringElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Ljava/lang/String;
+	public abstract fun endStructure (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)V
+	public abstract fun getSerializersModule ()Lorg/erwinkok/kik/typesystem/internal/SerializersModule;
+}
+
+public final class org/erwinkok/kik/typesystem/encoding/CompositeDecoder$Companion {
+	public static final field DECODE_DONE I
+	public static final field UNKNOWN_NAME I
+}
+
+public final class org/erwinkok/kik/typesystem/encoding/CompositeDecoder$DefaultImpls {
+	public static fun decodeCollectionSize (Lorg/erwinkok/kik/typesystem/encoding/CompositeDecoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)I
+	public static synthetic fun decodeNullableSerializableElement$default (Lorg/erwinkok/kik/typesystem/encoding/CompositeDecoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;Ljava/lang/Object;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun decodeSequentially (Lorg/erwinkok/kik/typesystem/encoding/CompositeDecoder;)Z
+	public static synthetic fun decodeSerializableElement$default (Lorg/erwinkok/kik/typesystem/encoding/CompositeDecoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;Ljava/lang/Object;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/encoding/CompositeEncoder {
+	public abstract fun encodeBooleanElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;IZ)V
+	public abstract fun encodeByteElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;IB)V
+	public abstract fun encodeCharElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;IC)V
+	public abstract fun encodeDoubleElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ID)V
+	public abstract fun encodeFloatElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;IF)V
+	public abstract fun encodeInlineElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Lorg/erwinkok/kik/typesystem/encoding/Encoder;
+	public abstract fun encodeIntElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;II)V
+	public abstract fun encodeLongElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;IJ)V
+	public abstract fun encodeNullableSerializableElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILorg/erwinkok/kik/typesystem/internal/SerializationStrategy;Ljava/lang/Object;)V
+	public abstract fun encodeSerializableElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILorg/erwinkok/kik/typesystem/internal/SerializationStrategy;Ljava/lang/Object;)V
+	public abstract fun encodeShortElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;IS)V
+	public abstract fun encodeStringElement (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILjava/lang/String;)V
+	public abstract fun endStructure (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)V
+	public abstract fun getSerializersModule ()Lorg/erwinkok/kik/typesystem/internal/SerializersModule;
+	public abstract fun shouldEncodeElementDefault (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Z
+}
+
+public final class org/erwinkok/kik/typesystem/encoding/CompositeEncoder$DefaultImpls {
+	public static fun shouldEncodeElementDefault (Lorg/erwinkok/kik/typesystem/encoding/CompositeEncoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Z
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/encoding/Decoder {
+	public abstract fun beginStructure (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Lorg/erwinkok/kik/typesystem/encoding/CompositeDecoder;
+	public abstract fun decodeBoolean ()Z
+	public abstract fun decodeByte ()B
+	public abstract fun decodeChar ()C
+	public abstract fun decodeDouble ()D
+	public abstract fun decodeEnum (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)I
+	public abstract fun decodeFloat ()F
+	public abstract fun decodeInline (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Lorg/erwinkok/kik/typesystem/encoding/Decoder;
+	public abstract fun decodeInt ()I
+	public abstract fun decodeLong ()J
+	public abstract fun decodeNotNullMark ()Z
+	public abstract fun decodeNull ()Ljava/lang/Void;
+	public abstract fun decodeNullableSerializableValue (Lorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;)Ljava/lang/Object;
+	public abstract fun decodeSerializableValue (Lorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;)Ljava/lang/Object;
+	public abstract fun decodeShort ()S
+	public abstract fun decodeString ()Ljava/lang/String;
+	public abstract fun getSerializersModule ()Lorg/erwinkok/kik/typesystem/internal/SerializersModule;
+}
+
+public final class org/erwinkok/kik/typesystem/encoding/Decoder$DefaultImpls {
+	public static fun decodeNullableSerializableValue (Lorg/erwinkok/kik/typesystem/encoding/Decoder;Lorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;)Ljava/lang/Object;
+	public static fun decodeSerializableValue (Lorg/erwinkok/kik/typesystem/encoding/Decoder;Lorg/erwinkok/kik/typesystem/internal/DeserializationStrategy;)Ljava/lang/Object;
+}
+
+public final class org/erwinkok/kik/typesystem/encoding/DecodingKt {
+	public static final fun decodeStructure (Lorg/erwinkok/kik/typesystem/encoding/Decoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/encoding/Encoder {
+	public abstract fun beginCollection (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Lorg/erwinkok/kik/typesystem/encoding/CompositeEncoder;
+	public abstract fun beginStructure (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Lorg/erwinkok/kik/typesystem/encoding/CompositeEncoder;
+	public abstract fun encodeBoolean (Z)V
+	public abstract fun encodeByte (B)V
+	public abstract fun encodeChar (C)V
+	public abstract fun encodeDouble (D)V
+	public abstract fun encodeEnum (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)V
+	public abstract fun encodeFloat (F)V
+	public abstract fun encodeInline (Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;)Lorg/erwinkok/kik/typesystem/encoding/Encoder;
+	public abstract fun encodeInt (I)V
+	public abstract fun encodeLong (J)V
+	public abstract fun encodeNotNullMark ()V
+	public abstract fun encodeNull ()V
+	public abstract fun encodeNullableSerializableValue (Lorg/erwinkok/kik/typesystem/internal/SerializationStrategy;Ljava/lang/Object;)V
+	public abstract fun encodeSerializableValue (Lorg/erwinkok/kik/typesystem/internal/SerializationStrategy;Ljava/lang/Object;)V
+	public abstract fun encodeShort (S)V
+	public abstract fun encodeString (Ljava/lang/String;)V
+	public abstract fun getSerializersModule ()Lorg/erwinkok/kik/typesystem/internal/SerializersModule;
+}
+
+public final class org/erwinkok/kik/typesystem/encoding/Encoder$DefaultImpls {
+	public static fun beginCollection (Lorg/erwinkok/kik/typesystem/encoding/Encoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;I)Lorg/erwinkok/kik/typesystem/encoding/CompositeEncoder;
+	public static fun encodeNotNullMark (Lorg/erwinkok/kik/typesystem/encoding/Encoder;)V
+	public static fun encodeNullableSerializableValue (Lorg/erwinkok/kik/typesystem/encoding/Encoder;Lorg/erwinkok/kik/typesystem/internal/SerializationStrategy;Ljava/lang/Object;)V
+	public static fun encodeSerializableValue (Lorg/erwinkok/kik/typesystem/encoding/Encoder;Lorg/erwinkok/kik/typesystem/internal/SerializationStrategy;Ljava/lang/Object;)V
+}
+
+public final class org/erwinkok/kik/typesystem/encoding/EncodingKt {
+	public static final fun encodeCollection (Lorg/erwinkok/kik/typesystem/encoding/Encoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;ILkotlin/jvm/functions/Function1;)V
+	public static final fun encodeCollection (Lorg/erwinkok/kik/typesystem/encoding/Encoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;Ljava/util/Collection;Lkotlin/jvm/functions/Function3;)V
+	public static final fun encodeStructure (Lorg/erwinkok/kik/typesystem/encoding/Encoder;Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;Lkotlin/jvm/functions/Function1;)V
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/internal/DeserializationStrategy {
+	public abstract fun deserialize (Lorg/erwinkok/kik/typesystem/encoding/Decoder;)Ljava/lang/Object;
+	public abstract fun getDescriptor ()Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/internal/GeneratedSerializer : org/erwinkok/kik/typesystem/internal/KSerializer {
+	public abstract fun childSerializers ()[Lorg/erwinkok/kik/typesystem/internal/KSerializer;
+	public abstract fun typeParametersSerializers ()[Lorg/erwinkok/kik/typesystem/internal/KSerializer;
+}
+
+public final class org/erwinkok/kik/typesystem/internal/GeneratedSerializer$DefaultImpls {
+	public static fun typeParametersSerializers (Lorg/erwinkok/kik/typesystem/internal/GeneratedSerializer;)[Lorg/erwinkok/kik/typesystem/internal/KSerializer;
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/internal/KSerializer : org/erwinkok/kik/typesystem/internal/DeserializationStrategy, org/erwinkok/kik/typesystem/internal/SerializationStrategy {
+	public abstract fun getDescriptor ()Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;
+}
+
 public abstract interface class org/erwinkok/kik/typesystem/internal/KikCommonType {
+	public abstract fun getKind ()Ljava/lang/Object;
+	public abstract fun setKind (Ljava/lang/Object;)V
 }
 
 public final class org/erwinkok/kik/typesystem/internal/SerializationConstructorMarker {
+}
+
+public abstract interface class org/erwinkok/kik/typesystem/internal/SerializationStrategy {
+	public abstract fun getDescriptor ()Lorg/erwinkok/kik/typesystem/descriptors/SerialDescriptor;
+	public abstract fun serialize (Lorg/erwinkok/kik/typesystem/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public abstract class org/erwinkok/kik/typesystem/internal/SerializersModule {
 }
 

@@ -142,26 +142,6 @@ internal class TestClassTypeChecker {
     }
 
     @Test
-    fun `companion object`() {
-        val companion = kotlin(
-            "Companion.kt",
-            """
-            package org.erwinkok.kik.typesystem.compiler.test
-            
-            import org.erwinkok.kik.typesystem.KikType
-
-            @KikType(group = "AGroup", version = "AVersion", kind = "AKind")
-            class TestClass {
-                companion object CompanionObject                               
-            }
-            """.trimIndent()
-        )
-        val result = prepare(companion).compile()
-        assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
-        assertContains(result.messages, "Class annotated with @KikType has a companion object")
-    }
-
-    @Test
     fun `constructor properties`() {
         val companion = kotlin(
             "Constructor.kt",
@@ -202,5 +182,29 @@ internal class TestClassTypeChecker {
         val result = prepare(companion).compile()
         assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
         assertContains(result.messages, "Enum class 'enum class TestEnum : Enum<TestEnum>' has duplicate property name 'A' in entry 'B'")
+    }
+
+    @Test
+    fun test() {
+        val companion = kotlin(
+            "Test.kt",
+            """
+            package org.erwinkok.kik.typesystem.compiler.test
+            
+            import org.erwinkok.kik.typesystem.KikProperty
+            import org.erwinkok.kik.typesystem.KikType
+           
+            @KikType(group = "AGroup", version = "AVersion", kind = "AKind")
+            class Test {
+                @KikProperty("A")
+                val a: String? = null
+                
+                @KikProperty("B")
+                var b: Int = 42                    
+            }
+            """.trimIndent()
+        )
+        val result = prepare(companion).compile()
+        assertEquals(ExitCode.OK, result.exitCode)
     }
 }

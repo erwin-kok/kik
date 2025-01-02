@@ -14,6 +14,7 @@ buildconfig-plugin = "5.5.1"
 [libraries]
 kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-gradlePluginApi = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin-api", version.ref = "kotlin" }
 testlogger-gradlePlugin = { module = "com.adarshr:gradle-test-logger-plugin", version.ref = "testlogger-plugin" }
 
 auto-service = { module = "com.google.auto.service:auto-service", version.ref = "auto-service" }
@@ -23,6 +24,7 @@ kotlin-compile-testing = { module = "dev.zacsweers.kctfork:core", version.ref = 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
 [plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 compatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "compatibility-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-plugin" }
 testlogger = { id = "com.adarshr.test-logger", version.ref = "testlogger-plugin" }

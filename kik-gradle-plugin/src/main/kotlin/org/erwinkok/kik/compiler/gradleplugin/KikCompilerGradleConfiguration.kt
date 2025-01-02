@@ -7,6 +7,6 @@ enum class ErrorCheckingMode {
 }
 
 open class KikCompilerGradleConfiguration {
-    var generateQualifiedTypeName: Boolean = false
+    var enabled: Boolean = true
     var errorCheckingMode: ErrorCheckingMode = ErrorCheckingMode.ERROR
 }

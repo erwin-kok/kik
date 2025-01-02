@@ -1,6 +1,7 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k2.checkers
 
+import org.erwinkok.kik.compiler.KikClassIds.kikCommonTypeClassId
 import org.erwinkok.kik.compiler.k2.getKikPropertyNameAnnotation
 import org.erwinkok.kik.compiler.k2.getPropertyNameValue
 import org.erwinkok.kik.compiler.k2.hasKikAnnotation
@@ -9,7 +10,6 @@ import org.erwinkok.kik.compiler.k2.kikAnnotationSource
 import org.erwinkok.kik.compiler.k2.services.kikPropertiesProvider
 import org.erwinkok.kik.compiler.properties.FirKikProperties
 import org.erwinkok.kik.compiler.properties.FirKikProperty
-import org.erwinkok.kik.compiler.resolve.KikEntityNames.kikCommonTypeClassId
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.isObject
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
@@ -54,7 +54,6 @@ internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common
             ::checkInnerClass,
             ::checkAbstractClass,
             ::checkTypeParameters,
-            ::checkCompanion,
             ::checkConstructorParameters,
         )
         classCheckers.forEach { checker ->
@@ -154,17 +153,6 @@ internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common
         if (declaration.typeParameters.isNotEmpty()) {
             val identifiers = declaration.typeParameters.joinToString(", ") { it.symbol.name.identifier }
             reporter.reportOn(classSymbol.kikAnnotationSource(context.session), FirKikErrors.TYPE_PARAMETERS_NOT_SUPPORTED, identifiers, context)
-            return true
-        }
-        return false
-    }
-
-    private fun checkCompanion(declaration: FirClass, context: CheckerContext, reporter: DiagnosticReporter): Boolean {
-        val classSymbol = declaration.symbol
-        if (classSymbol !is FirRegularClassSymbol) return false
-        val companionObjectSymbol = classSymbol.companionObjectSymbol
-        if (companionObjectSymbol != null) {
-            reporter.reportOn(classSymbol.kikAnnotationSource(context.session), FirKikErrors.COMPANION_OBJECT_NOT_SUPPORTED, companionObjectSymbol.name.identifier, context)
             return true
         }
         return false

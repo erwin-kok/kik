@@ -1,9 +1,9 @@
 // Copyright (c) 2024. Erwin Kok. Apache License. See LICENSE file for more details.
 package org.erwinkok.kik.compiler.k2
 
-import org.erwinkok.kik.compiler.resolve.AnnotationParameterNames
-import org.erwinkok.kik.compiler.resolve.KikAnnotations
-import org.erwinkok.kik.compiler.resolve.KikAnnotations.kikPropertyAnnotationClassId
+import org.erwinkok.kik.compiler.AnnotationParameterNames
+import org.erwinkok.kik.compiler.KikAnnotations
+import org.erwinkok.kik.compiler.KikAnnotations.kikPropertyAnnotationClassId
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.isEnumClass
@@ -30,6 +30,9 @@ import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.platform.isJs
+import org.jetbrains.kotlin.platform.isWasm
+import org.jetbrains.kotlin.platform.konan.isNative
 import org.jetbrains.kotlin.types.ConstantValueKind
 
 internal fun FirClassSymbol<*>.hasKikAnnotation(session: FirSession): Boolean {
@@ -73,6 +76,13 @@ internal val ConeKotlinType.isTypeParameter: Boolean
 internal fun FirClassLikeDeclaration.markAsDeprecatedHidden(session: FirSession) {
     replaceAnnotations(annotations + listOf(createDeprecatedHiddenAnnotation(session)))
     replaceDeprecationsProvider(this.getDeprecationsProvider(session))
+}
+
+internal fun FirClassSymbol<*>.companionNeedsSerializerFactory(session: FirSession): Boolean {
+    if (!moduleData.platform.run { isNative() || isJs() || isWasm() }) return false
+    if (isSerializableEnum(session)) return true
+    if (typeParameterSymbols.isEmpty()) return false
+    return true
 }
 
 private fun createDeprecatedHiddenAnnotation(session: FirSession): FirAnnotation = buildAnnotation {
