@@ -2,7 +2,5 @@
 package org.erwinkok.kik.typesystem.internal
 
 interface KikCommonType<T> {
-    var kind: RealmObjectReference<out BaseRealmObject>?
-
-    val xxx: T
+    var kind: T
 }

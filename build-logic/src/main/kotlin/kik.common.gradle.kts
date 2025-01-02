@@ -1,5 +1,4 @@
 import com.adarshr.gradle.testlogger.theme.ThemeType
-import org.erwinkok.kik.compiler.gradleplugin.ErrorCheckingMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -7,12 +6,6 @@ plugins {
     idea
     kotlin("jvm")
     com.adarshr.`test-logger`
-    id("org.erwinkok.kik.compiler-plugin")
-}
-
-kik {
-    enabled = true
-    errorCheckingMode = ErrorCheckingMode.WARNING
 }
 
 testlogger {

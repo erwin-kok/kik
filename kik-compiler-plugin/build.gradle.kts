@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     idea
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm")
     alias(libs.plugins.ksp)
     alias(libs.plugins.compatibility)
     alias(libs.plugins.testlogger)

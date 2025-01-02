@@ -11,6 +11,10 @@ internal class KikCompilerSubPlugin : KotlinCompilerPluginSupportPlugin {
     override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
         val project = kotlinCompilation.target.project
         val extension = project.extensions.getByType(KikCompilerGradleConfiguration::class.java)
+        project.dependencies.add(
+            kotlinCompilation.implementationConfigurationName,
+            "org.erwinkok.kik:kik-type-system:0.1.0"
+        )
         return project.provider {
             listOf(
                 SubpluginOption("enabled", extension.enabled.toString()),
@@ -23,7 +27,7 @@ internal class KikCompilerSubPlugin : KotlinCompilerPluginSupportPlugin {
     }
 
     override fun getPluginArtifact(): SubpluginArtifact {
-        return SubpluginArtifact(KIK_COMPILER_GROUP_NAME, KIK_COMPILER_ARTIFACT_NAME)
+        return SubpluginArtifact(KIK_COMPILER_GROUP_NAME, KIK_COMPILER_ARTIFACT_NAME, "0.1.0")
     }
 
     override fun getPluginArtifactForNative(): SubpluginArtifact? {
