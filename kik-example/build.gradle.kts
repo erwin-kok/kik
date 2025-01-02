@@ -15,6 +15,8 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     implementation(projects.kikTypeSystem)
+
+    testImplementation(libs.kotlin.test)
 }
 
 configurations.configureEach {

@@ -20,11 +20,11 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation(gradleApi())
     implementation(libs.kotlin.compiler.embeddable)
     implementation(libs.auto.service)
     implementation(libs.auto.service.annotations)
     ksp(libs.auto.service.ksp)
+    implementation(projects.kikTypeSystem)
 
     testImplementation(libs.kotlin.compile.testing)
     testImplementation(libs.kotlin.test)

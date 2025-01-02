@@ -184,7 +184,7 @@ internal class TestClassTypeChecker {
         assertContains(result.messages, "Enum class 'enum class TestEnum : Enum<TestEnum>' has duplicate property name 'A' in entry 'B'")
     }
 
-    //    @Test
+    @Test
     fun test() {
         val companion = kotlin(
             "Test.kt",
