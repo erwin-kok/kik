@@ -54,7 +54,6 @@ internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common
             ::checkInnerClass,
             ::checkAbstractClass,
             ::checkTypeParameters,
-            ::checkCompanion,
             ::checkConstructorParameters,
         )
         classCheckers.forEach { checker ->
@@ -154,17 +153,6 @@ internal object FirKikPluginClassChecker : FirClassChecker(MppCheckerKind.Common
         if (declaration.typeParameters.isNotEmpty()) {
             val identifiers = declaration.typeParameters.joinToString(", ") { it.symbol.name.identifier }
             reporter.reportOn(classSymbol.kikAnnotationSource(context.session), FirKikErrors.TYPE_PARAMETERS_NOT_SUPPORTED, identifiers, context)
-            return true
-        }
-        return false
-    }
-
-    private fun checkCompanion(declaration: FirClass, context: CheckerContext, reporter: DiagnosticReporter): Boolean {
-        val classSymbol = declaration.symbol
-        if (classSymbol !is FirRegularClassSymbol) return false
-        val companionObjectSymbol = classSymbol.companionObjectSymbol
-        if (companionObjectSymbol != null) {
-            reporter.reportOn(classSymbol.kikAnnotationSource(context.session), FirKikErrors.COMPANION_OBJECT_NOT_SUPPORTED, companionObjectSymbol.name.identifier, context)
             return true
         }
         return false

@@ -7,8 +7,13 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 internal class KikClassLowering(
-    baseContext: IrPluginContext
+    pluginContext: IrPluginContext
 ) : IrElementTransformerVoid(), ClassLoweringPass {
+    private val compilerContext = KikPluginContext(pluginContext)
+
     override fun lower(irClass: IrClass) {
+        SerializableIrGenerator.generate(irClass, compilerContext)
+        SerializerIrGenerator.generate(irClass, compilerContext)
+        SerializableCompanionIrGenerator.generate(irClass, compilerContext)
     }
 }

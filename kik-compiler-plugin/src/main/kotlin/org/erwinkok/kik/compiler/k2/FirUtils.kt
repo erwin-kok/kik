@@ -30,6 +30,9 @@ import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.platform.isJs
+import org.jetbrains.kotlin.platform.isWasm
+import org.jetbrains.kotlin.platform.konan.isNative
 import org.jetbrains.kotlin.types.ConstantValueKind
 
 internal fun FirClassSymbol<*>.hasKikAnnotation(session: FirSession): Boolean {
@@ -73,6 +76,13 @@ internal val ConeKotlinType.isTypeParameter: Boolean
 internal fun FirClassLikeDeclaration.markAsDeprecatedHidden(session: FirSession) {
     replaceAnnotations(annotations + listOf(createDeprecatedHiddenAnnotation(session)))
     replaceDeprecationsProvider(this.getDeprecationsProvider(session))
+}
+
+internal fun FirClassSymbol<*>.companionNeedsSerializerFactory(session: FirSession): Boolean {
+    if (!moduleData.platform.run { isNative() || isJs() || isWasm() }) return false
+    if (isSerializableEnum(session)) return true
+    if (typeParameterSymbols.isEmpty()) return false
+    return true
 }
 
 private fun createDeprecatedHiddenAnnotation(session: FirSession): FirAnnotation = buildAnnotation {

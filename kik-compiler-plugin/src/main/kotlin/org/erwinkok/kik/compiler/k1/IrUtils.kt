@@ -20,18 +20,26 @@ import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.createBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
+import org.jetbrains.kotlin.ir.expressions.IrBody
 import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrConstructorCall
+import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrInstanceInitializerCallImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
+import org.jetbrains.kotlin.ir.types.IrSimpleType
+import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.util.findAnnotation
+import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getAnnotation
+import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.name.ClassId
 
 internal val IrClass.isSerializable: Boolean
@@ -40,6 +48,16 @@ internal val IrClass.isSerializable: Boolean
         if (getAnnotation(KikAnnotations.kikTypePartAnnotationFqName) != null) return true
         return getAnnotation(KikAnnotations.kikTypeAnnotationFqName) != null
     }
+
+internal val IrClass.isEnumSerializable: Boolean
+    get() {
+        if (kind != ClassKind.ENUM_CLASS) return false
+        if (getAnnotation(KikAnnotations.kikTypePartAnnotationFqName) != null) return true
+        return getAnnotation(KikAnnotations.kikTypeAnnotationFqName) != null
+    }
+
+internal val IrClass.shouldHaveGeneratedMethodsInCompanion: Boolean
+    get() = this.isEnumSerializable || this.isSerializable
 
 private fun IrClass.checkSerializableOrMetaAnnotationArgs(): Boolean {
     val annot = getAnnotation(KikAnnotations.kikTypeAnnotationFqName)
@@ -113,3 +131,43 @@ internal fun IrPluginContext.blockBody(
     block: IrBlockBodyBuilder.() -> Unit
 ): IrBlockBody =
     DeclarationIrBuilder(this, symbol).irBlockBody { block() }
+
+internal fun IrClass.addDefaultConstructorBodyIfAbsent(ctx: IrPluginContext) {
+    val declaration = primaryConstructor ?: return
+    if (declaration.body == null) declaration.body = ctx.generateBodyForDefaultConstructor(declaration)
+}
+
+internal fun IrPluginContext.generateBodyForDefaultConstructor(declaration: IrConstructor): IrBody? {
+    val type = declaration.returnType as? IrSimpleType ?: return null
+
+    val delegatingAnyCall = IrDelegatingConstructorCallImpl(
+        -1,
+        -1,
+        irBuiltIns.anyType,
+        irBuiltIns.anyClass.owner.primaryConstructor?.symbol ?: return null,
+        typeArgumentsCount = 0,
+    )
+
+    val initializerCall = IrInstanceInitializerCallImpl(
+        -1,
+        -1,
+        (declaration.parent as? IrClass)?.symbol ?: return null,
+        type
+    )
+
+    return irFactory.createBlockBody(-1, -1, listOf(delegatingAnyCall, initializerCall))
+}
+
+internal fun getSerializableClassByCompanion(companionClass: IrClass): IrClass? {
+    if (!companionClass.isCompanion) return null
+    val classDescriptor = (companionClass.parent as? IrClass) ?: return null
+    if (!classDescriptor.shouldHaveGeneratedMethodsInCompanion) return null
+    return classDescriptor
+}
+
+internal fun IrType.isKSerializer(): Boolean {
+    val simpleType = this as? IrSimpleType ?: return false
+    val classifier = simpleType.classifier as? IrClassSymbol ?: return false
+    val fqName = classifier.owner.fqNameWhenAvailable
+    return fqName == KikEntityNames.KSERIALIZER_NAME_FQ || fqName == KikEntityNames.GENERATED_SERIALIZER_FQ
+}

@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 
 internal class KikClassPreLowering(
-    val pluginContext: IrPluginContext
+    pluginContext: IrPluginContext
 ) : IrElementTransformerVoid(), ClassLoweringPass {
     private val compilerContext = KikPluginContext(pluginContext)
 
@@ -47,14 +47,8 @@ internal class KikClassPreLowering(
         val commonTypeSymbol = compilerContext.lookupClassOrThrow(kikCommonTypeClassId).symbol
         irClass.superTypes += commonTypeSymbol.defaultType
 
-
-        // Generate RealmObjectInternal properties overrides
-        val generator = KikModelSyntheticPropertiesGeneration(pluginContext)
-        generator.addKikCommonTypeInternalProperties(irClass)
-
-
-//        preGenerateWriteSelfMethodIfNeeded(irClass)
-//        preGenerateDeserializationConstructorIfNeeded(irClass)
+        preGenerateWriteSelfMethodIfNeeded(irClass)
+        preGenerateDeserializationConstructorIfNeeded(irClass)
     }
 
     private fun preGenerateWriteSelfMethodIfNeeded(irClass: IrClass) {
@@ -101,7 +95,7 @@ internal class KikClassPreLowering(
             method.annotations += IrConstructorCallImpl.fromSymbolOwner(method.startOffset, method.endOffset, annotationType, annotationCtor)
         }
 
-//        compilerContext.metadataDeclarationRegistrar.registerFunctionAsMetadataVisible(method)
+        compilerContext.metadataDeclarationRegistrar.registerFunctionAsMetadataVisible(method)
     }
 
     private fun preGenerateDeserializationConstructorIfNeeded(irClass: IrClass) {
@@ -128,7 +122,7 @@ internal class KikClassPreLowering(
 
         ctor.addValueParameter(KikEntityNames.dummyParamName, markerClassSymbol.defaultType.makeNullable(), KIK_PLUGIN_ORIGIN)
 
-//        compilerContext.metadataDeclarationRegistrar.registerConstructorAsMetadataVisible(ctor)
+        compilerContext.metadataDeclarationRegistrar.registerConstructorAsMetadataVisible(ctor)
     }
 
     private fun IrType.makeNullableIfNotPrimitive(): IrType {
