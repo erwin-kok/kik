@@ -9,26 +9,22 @@ import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.util.patchDeclarationParents
-import org.jetbrains.kotlin.ir.util.properties
 
 internal class SerializerIrGenerator(
     val irClass: IrClass,
     compilerContext: KikPluginContext
 ) : IrBuilder(compilerContext) {
-    protected val generatedSerialDescPropertyDescriptor = getProperty(KikEntityNames.SERIAL_DESC_FIELD) { true }?.takeIf { it.isFromPlugin() }
-
     fun generate() {
-        if (generatedSerialDescPropertyDescriptor != null) {
-            generateSerialDesc()
-        }
+        irClass.findPluginGeneratedProperty(KikEntityNames.SERIAL_DESC_FIELD)?.let { generateSerialDescriptor(it) }
 
         irClass.findPluginGeneratedMethod(KikEntityNames.SAVE)?.let { generateSave(it) }
         irClass.findPluginGeneratedMethod(KikEntityNames.LOAD)?.let { generateLoad(it) }
         irClass.findPluginGeneratedMethod(KikEntityNames.CHILD_SERIALIZERS_GETTER.identifier)?.let { generateChildSerializersGetter(it) }
         irClass.findPluginGeneratedMethod(KikEntityNames.TYPE_PARAMS_SERIALIZERS_GETTER.identifier)?.let { generateTypeParamsSerializersGetter(it) }
-        if (generatedSerialDescPropertyDescriptor == null) {
-            generateSerialDesc()
-        }
+    }
+
+    private fun generateSerialDescriptor(generatedSerialDescPropertyDescriptor: IrProperty) {
+
     }
 
     private fun generateSave(function: IrSimpleFunction) {
@@ -49,17 +45,6 @@ internal class SerializerIrGenerator(
     private fun generateTypeParamsSerializersGetter(function: IrSimpleFunction) {
         addFunctionBody(function) { irFun ->
         }
-    }
-
-    private fun getProperty(
-        name: String,
-        isReturnTypeOk: (IrProperty) -> Boolean
-    ): IrProperty? {
-        return irClass.properties.singleOrNull { it.name.asString() == name && isReturnTypeOk(it) }
-    }
-
-    private fun generateSerialDesc() {
-
     }
 
     companion object {

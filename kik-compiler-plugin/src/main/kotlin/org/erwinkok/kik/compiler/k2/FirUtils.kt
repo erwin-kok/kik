@@ -5,7 +5,7 @@ import org.erwinkok.kik.compiler.AnnotationParameterNames
 import org.erwinkok.kik.compiler.KikAnnotations
 import org.erwinkok.kik.compiler.KikAnnotations.kikPropertyAnnotationClassId
 import org.jetbrains.kotlin.KtSourceElement
-import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.descriptors.isClass
 import org.jetbrains.kotlin.descriptors.isEnumClass
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
@@ -30,9 +30,6 @@ import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
-import org.jetbrains.kotlin.platform.isJs
-import org.jetbrains.kotlin.platform.isWasm
-import org.jetbrains.kotlin.platform.konan.isNative
 import org.jetbrains.kotlin.types.ConstantValueKind
 
 internal fun FirClassSymbol<*>.hasKikAnnotation(session: FirSession): Boolean {
@@ -67,8 +64,12 @@ internal fun FirClassSymbol<*>.isSerializableEnum(session: FirSession): Boolean 
     return classKind.isEnumClass && hasKikAnnotation(session)
 }
 
-internal fun FirClassSymbol<*>.shouldHaveGeneratedMethodsInCompanion(session: FirSession): Boolean =
-    isSerializableEnum(session) || (classKind == ClassKind.CLASS && hasKikAnnotation(session))
+internal fun FirClassSymbol<*>.isSerializableClass(session: FirSession): Boolean {
+    return classKind.isClass && hasKikAnnotation(session)
+}
+
+internal fun FirClassSymbol<*>.isSerializable(session: FirSession): Boolean =
+    isSerializableEnum(session) || isSerializableClass(session)
 
 internal val ConeKotlinType.isTypeParameter: Boolean
     get() = this is ConeTypeParameterType
@@ -76,13 +77,6 @@ internal val ConeKotlinType.isTypeParameter: Boolean
 internal fun FirClassLikeDeclaration.markAsDeprecatedHidden(session: FirSession) {
     replaceAnnotations(annotations + listOf(createDeprecatedHiddenAnnotation(session)))
     replaceDeprecationsProvider(this.getDeprecationsProvider(session))
-}
-
-internal fun FirClassSymbol<*>.companionNeedsSerializerFactory(session: FirSession): Boolean {
-    if (!moduleData.platform.run { isNative() || isJs() || isWasm() }) return false
-    if (isSerializableEnum(session)) return true
-    if (typeParameterSymbols.isEmpty()) return false
-    return true
 }
 
 private fun createDeprecatedHiddenAnnotation(session: FirSession): FirAnnotation = buildAnnotation {

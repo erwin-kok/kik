@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.createBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
@@ -40,6 +41,7 @@ import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getAnnotation
 import org.jetbrains.kotlin.ir.util.primaryConstructor
+import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.name.ClassId
 
 internal val IrClass.isSerializable: Boolean
@@ -104,12 +106,21 @@ internal fun IrClass.findPluginGeneratedMethod(name: String): IrSimpleFunction? 
     }
 }
 
+internal fun IrClass.findPluginGeneratedProperty(name: String): IrProperty? {
+    return this.properties.singleOrNull {
+        it.name.asString() == name && it.isFromPlugin()
+    }
+}
+
+internal fun IrClass.findWriteSelfMethod(): IrSimpleFunction? {
+    return functions.singleOrNull {
+        it.name == KikEntityNames.WRITE_SELF_NAME && !it.isFakeOverride
+    }
+}
+
 @OptIn(ObsoleteDescriptorBasedAPI::class)
 internal fun IrDeclaration.isFromPlugin(): Boolean =
     this.origin == IrDeclarationOrigin.GeneratedByPlugin(KikPluginKey)
-
-internal fun IrClass.findWriteSelfMethod(): IrSimpleFunction? =
-    functions.singleOrNull { it.name == KikEntityNames.WRITE_SELF_NAME && !it.isFakeOverride }
 
 internal fun IrClass.findSerializableSyntheticConstructor(): IrConstructorSymbol? {
     return declarations.filterIsInstance<IrConstructor>().singleOrNull { it.isSerializationCtor() }?.symbol
